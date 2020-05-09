@@ -82,15 +82,7 @@ void PutNumSort(int num, btree *node)
 
 void InputGenerator(int k)
 {
-   try
-   {
-      in.open("in.txt", fstream::badbit | fstream::failbit);
-   }
-   catch (const fstream::failure &exeption)
-   {
-      cout << exeption.what() << endl;
-      cout << exeption.code() << endl;
-   }
+   in.open("in.txt", fstream::out);
    int num;
    for (int i = 0; i < k; i++)
    {
@@ -125,7 +117,15 @@ void GenerationManager(btree *root)
             cout << "Введите количество элементов дерева: ";
             cin >> k;
             InputGenerator(k);
-            in.open("in.txt", fstream::in);
+            try
+            {
+               in.open("in.txt", fstream::in);
+            }
+            catch (const fstream::failure &exeption)
+            {
+               cout << exeption.what() << endl;
+               cout << exeption.code() << endl;
+            }
             in >> num;
             root->elem = num;
             while (in >> num)
@@ -137,7 +137,15 @@ void GenerationManager(btree *root)
             cout << "Введите количество элементов дерева: ";
             cin >> k;
             InputGenerator(k);
-            in.open("in.txt", fstream::in);
+            try
+            {
+               in.open("in.txt", fstream::in);
+            }
+            catch (const fstream::failure &exeption)
+            {
+               cout << exeption.what() << endl;
+               cout << exeption.code() << endl;
+            }
             in >> num;
             root->elem = num;
             while (in >> num)
@@ -146,7 +154,15 @@ void GenerationManager(btree *root)
             cout << "Генерация завершена!\n";
             break;
          case CMD_IN: exitFlag = 1;
-            in.open("in.txt", fstream::in);
+            try
+            {
+               in.open("in.txt", fstream::in);
+            }
+            catch (const fstream::failure &exeption)
+            {
+               cout << exeption.what() << endl;
+               cout << exeption.code() << endl;
+            }
             while (in >> num)
                PutNumSort(num, root);
             in.close();
@@ -215,6 +231,7 @@ int main()
    SetConsoleCP(1251);
    SetConsoleOutputCP(1251);
  
+   srand(time(NULL));
    out.open("out.txt");
    if (!out.is_open())
       cout << "Ошибка открытия файла out.txt" << endl;
@@ -320,7 +337,12 @@ int main()
             break;
          case CMD_SEARCH: repeatFlag = 1;
             cout << "Введите значение искомого элемента: ";
-            cin >> num;
+            if (!(cin >> num))
+            {
+               cout << "ошибка ввода\n";
+               _getch();
+               return 1;
+            }
             if (root->search(num))
                cout << "Элемент найден.\n";
             else
